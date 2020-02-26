@@ -1,37 +1,35 @@
 ---
-- name: r1soft playbook
+- name: R1soft Playbook
   hosts: all
   become: true
   become_method: sudo
   connection: ssh
   ignore_errors: false
   tasks:
-    - name: creates a repo
-      copy:
+    - name: Creates  a repo
+      copy: 
         src: r1soft.repo
         dest: /etc/yum.repos.d/r1soft.repo
 
-
     - name: Install R1soft
-      packages:
-        name: serverbackup-enterprise-agent
+      package:
+        name: serverbackup-enterprise-agent 
         state: latest
 
 
-    - name: Poweroff IP tabeles
-      systemd:
+    - name: Power off iptables
+      systemd: 
         name: firewalld
         state: stopped
       ignore_errors: true
 
 
-    - name: Get Key
-      shell: r1soft-setup --get-key  backup.maqsudat.net
+    - name: Get Key 
+      shell: r1soft-setup --get-key http://backup.maqsudat.net.
 
 
-    - name: Start r1soft agent
-      systemd:
+
+    - name: Start R1soft Agent 
+      systemd: 
         name: sbm-agent
         state: restarted
-
-        
